@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'map_filter.dart';
+import 'map_filter_dialog.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -12,6 +14,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPage extends State<MapPage> {
   int currentItem = 0;
+  MapFilter mapFilter = MapFilter();
 
   @override
   void initState() {
@@ -23,7 +26,23 @@ class _MapPage extends State<MapPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My 부동산'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+        actions: [
+          IconButton(
+            onPressed: () async {
+              var result = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return MapFilterDialog(mapFilter);
+                  },
+                ),
+              );
+              if (result != null) {
+                mapFilter = result as MapFilter;
+              }
+            },
+            icon: const Icon(Icons.search),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
