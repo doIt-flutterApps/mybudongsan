@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../geoFire/geoflutterfire.dart';
 import '../geoFire/models/point.dart';
 import 'apt_page.dart';
+import 'package:mybudongsan/myFavorite/my_favorite_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -218,7 +219,18 @@ class _MapPage extends State<MapPage> {
                 ],
               ),
             ),
-            ListTile(title: const Text('내가 선택한 아파트'), onTap: () {}),
+            ListTile(
+              title: const Text('내가 선택한 아파트'),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const MyFavoritePage();
+                    },
+                  ),
+                );
+              },
+            ),
             ListTile(title: const Text('설정'), onTap: () {}),
           ],
         ),

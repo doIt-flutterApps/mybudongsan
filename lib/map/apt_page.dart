@@ -26,10 +26,62 @@ class _AptPageState extends State<AptPage> {
     _checkFavorite(); // 찜 여부 확인하기
   }
 
-  Future<void> _checkFavorite() async {}
+  Future<void> _checkFavorite() async {
+    try {
+      final docSnapshot =
+          await FirebaseFirestore.instance
+              .collection('rollcake')
+              .doc('favorite')
+              .get();
+
+      if (docSnapshot.exists) {
+        // 문서가 있다면 찜 상태 확인하기
+        final favoriteData =
+            docSnapshot.data() as Map<String, dynamic>?; // 형 변환과 null 확인하기
+        if (favoriteData != null && favoriteData['aptHash'] == widget.aptHash) {
+          setState(() {
+            _isFavorite = true;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error checking favorite: $e');
+    }
+  }
 
   // 찜 추가/제거 함수
-  Future<void> _toggleFavorite() async {}
+  Future<void> _toggleFavorite() async {
+    try {
+      final favoriteRef = FirebaseFirestore.instance
+          .collection('rollcake')
+          .doc('favorite');
+      if (_isFavorite) {
+        // 찜 제거하기
+        await favoriteRef.delete();
+        setState(() {
+          _isFavorite = false;
+        });
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('나의 아파트에서 제거되었습니다.')));
+      } else {
+        // 찜 추가하기
+        await favoriteRef.set(widget.aptInfo);
+        setState(() {
+          _isFavorite = true;
+        });
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('나의 아파트로 등록되었습니다.')));
+      }
+    } catch (e) {
+      // 오류 처리하기
+      print('Error toggling favorite: $e');
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('찜 기능에 오류가 발생했습니다.')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
