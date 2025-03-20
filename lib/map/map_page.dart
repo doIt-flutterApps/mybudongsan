@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../geoFire/geoflutterfire.dart';
 import '../geoFire/models/point.dart';
+import 'apt_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -120,6 +121,16 @@ class _MapPage extends State<MapPage> {
             snippet: info['address'],
             onTap: () {
               // AptPage로 이동하기
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AptPage(
+                      aptHash: info['position']['geohash'],
+                      aptInfo: info,
+                    );
+                  },
+                ),
+              );
             },
           ),
           position: LatLng(
@@ -235,7 +246,18 @@ class _MapPage extends State<MapPage> {
                         trailing: const Icon(Icons.arrow_circle_right_sharp),
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AptPage(
+                              aptHash: item['position']['geohash'],
+                              aptInfo: item,
+                            );
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
                 itemCount: documentList.length,
