@@ -121,14 +121,14 @@ class _MapPage extends State<MapPage> {
             snippet: info['address'],
             onTap: () {
               // AptPage로 이동하기
-              Navigator.of(context).push(
+              Navigator.push(
+                context,
                 MaterialPageRoute(
-                  builder: (context) {
-                    return AptPage(
-                      aptHash: info['position']['geohash'],
-                      aptInfo: info,
-                    );
-                  },
+                  builder:
+                      (context) => AptPage(
+                        aptHash: info['position']['geohash'],
+                        aptInfo: info,
+                      ),
                 ),
               );
             },
@@ -247,14 +247,14 @@ class _MapPage extends State<MapPage> {
                       ),
                     ),
                     onTap: () {
-                      Navigator.of(context).push(
+                      Navigator.push(
+                        context,
                         MaterialPageRoute(
-                          builder: (context) {
-                            return AptPage(
-                              aptHash: item['position']['geohash'],
-                              aptInfo: item,
-                            );
-                          },
+                          builder:
+                              (context) => AptPage(
+                                aptHash: item['position']['geohash'],
+                                aptInfo: item,
+                              ),
                         ),
                       );
                     },
