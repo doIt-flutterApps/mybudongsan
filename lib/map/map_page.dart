@@ -9,6 +9,8 @@ import '../geoFire/geoflutterfire.dart';
 import '../geoFire/models/point.dart';
 import 'apt_page.dart';
 import 'package:mybudongsan/myFavorite/my_favorite_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../settings/setting_page.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -20,6 +22,8 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPage extends State<MapPage> {
+  MapType mapType = MapType.normal;
+
   int currentItem = 0;
   MapFilter mapFilter = MapFilter();
   Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
@@ -231,14 +235,44 @@ class _MapPage extends State<MapPage> {
                 );
               },
             ),
-            ListTile(title: const Text('설정'), onTap: () {}),
+            ListTile(
+              title: const Text('설정'),
+              onTap: () async {
+                Navigator.of(context)
+                    .push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return SettingPage();
+                        },
+                      ),
+                    )
+                    .then((value) async {
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      final int? type = prefs.getInt('mapType');
+                      setState(() {
+                        switch (type) {
+                          case 0:
+                            mapType = MapType.terrain;
+                            break;
+                          case 1:
+                            mapType = MapType.satellite;
+                            break;
+                          case 2:
+                            mapType = MapType.hybrid;
+                            break;
+                        }
+                      });
+                    });
+              },
+            ),
           ],
         ),
       ),
       body:
           currentItem == 0
               ? GoogleMap(
-                mapType: MapType.normal,
+                mapType: mapType,
                 initialCameraPosition: _googleMapCamera,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
